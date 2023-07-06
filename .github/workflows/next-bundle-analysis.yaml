@@ -5,8 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
+    branches: '**'
   workflow_dispatch:
 
 jobs:
@@ -57,7 +56,6 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         if: success() && github.event.number
         with:
-          workflow: next-bundle-analysis.yaml
           branch: ${{ github.event.pull_request.base.ref }}
           path: .next/analyze/base/bundle
           name: build-bundle-artifacts

@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }: AppWithProps) {
       <ApiHistoryProvider>{children}</ApiHistoryProvider>
     );
   };
-
+  console.log("test");
   return (
     <ToastQueueProvider>
       <ModalManager.Provider>
