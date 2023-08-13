@@ -57,7 +57,7 @@ export namespace RoomInfo {
   export type Room = {
     id: string;
     name: string;
-    status: "WATTING" | "PLAYING";
+    status: "WAITING" | "PLAYING";
     game: Game;
     host: User;
     isLocked: boolean;

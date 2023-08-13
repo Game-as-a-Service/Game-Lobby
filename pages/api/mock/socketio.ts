@@ -38,14 +38,72 @@ const socketio = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
       onlineUsers.set(socket.id, socket.id);
 
       socket.on(SOCKET_EVENT.CHAT_MESSAGE, (message) => {
-        // eslint-disable-next-line no-console
-        console.log("Message received in server: ", message);
+        if (message.content === "join") {
+          socket.emit(SOCKET_EVENT.USER_JOINED, {
+            user: {
+              id: "123",
+              nickname: "haha",
+            },
+            roomId: "0",
+          });
+        }
+
+        if (message.content === "ready") {
+          socket.emit(SOCKET_EVENT.USER_READY, {
+            user: {
+              id: "123",
+              nickname: "haha",
+            },
+            roomId: "0",
+          });
+        }
+
+        if (message.content === "notReady") {
+          socket.emit(SOCKET_EVENT.USER_READY, {
+            user: {
+              id: "123",
+              nickname: "haha",
+            },
+            roomId: "0",
+          });
+        }
+
+        if (message.content === "host") {
+          socket.emit(SOCKET_EVENT.HOST_CHANGED, {
+            user: {
+              id: "123",
+              nickname: "haha",
+            },
+            roomId: "0",
+          });
+        }
+
+        if (message.content === "start") {
+          socket.emit(SOCKET_EVENT.GAME_STARTED, {
+            gameUrl: "1231231231",
+            roomId: "0",
+          });
+        }
+
+        if (message.content === "end") {
+          socket.emit(SOCKET_EVENT.GAME_ENDED, {
+            roomId: "0",
+          });
+        }
+
+        if (message.content === "close") {
+          socket.emit(SOCKET_EVENT.ROOM_CLOSED, {
+            roomId: "0",
+          });
+        }
+
+        // console.log("Message received in server: ", message);
         io.emit(SOCKET_EVENT.CHAT_MESSAGE, message);
       });
       socket.on(SOCKET_EVENT.DISCONNECT, () => {
         onlineUsers.delete(socket.id);
         // eslint-disable-next-line no-console
-        console.log("SOCKET DISCONNECTED IN SERVER! ", socket.id);
+        // console.log("SOCKET DISCONNECTED IN SERVER! ", socket.id);
         if (isEmitting && onlineUsers.size === 0) {
           clearInterval(sendOnlineUsers);
           isEmitting = false;

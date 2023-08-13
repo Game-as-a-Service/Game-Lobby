@@ -4,7 +4,7 @@ import { RoomInfo } from "@/requests/rooms";
 const initRoomInfo: RoomInfo.Room = {
   id: "",
   name: "string",
-  status: "WATTING",
+  status: "WAITING",
   game: { id: "", name: "" },
   host: { id: "", nickname: "", isReady: false },
   isLocked: false,
@@ -51,7 +51,7 @@ type UpdateRoomStatus = {
 
 type UpdateUserReadyStatus = {
   type: REDUCER_ACTION_TYPE.TOGGLE_USER_READY_STATUS;
-  payload: Pick<RoomInfo.User, "id">;
+  payload: Pick<RoomInfo.User, "id" | "isReady">;
 };
 
 type CleanUpRoomAction = {
@@ -171,12 +171,15 @@ export default function useRoom() {
     });
   }, []);
 
-  const toggleUserReadyStatus = useCallback((userId: RoomInfo.User["id"]) => {
-    dispatch({
-      type: REDUCER_ACTION_TYPE.TOGGLE_USER_READY_STATUS,
-      payload: { id: userId },
-    });
-  }, []);
+  const toggleUserReadyStatus = useCallback(
+    (userId: RoomInfo.User["id"], isReady: boolean) => {
+      dispatch({
+        type: REDUCER_ACTION_TYPE.TOGGLE_USER_READY_STATUS,
+        payload: { id: userId, isReady },
+      });
+    },
+    []
+  );
 
   const cleanUpRoom = useCallback(() => {
     dispatch({ type: REDUCER_ACTION_TYPE.CLEAN_UP_ROOM });

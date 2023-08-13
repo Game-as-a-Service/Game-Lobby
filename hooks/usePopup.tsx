@@ -50,20 +50,23 @@ export default function usePopup() {
     resetPopup();
   }, [popupConfig, resetPopup]);
 
-  function firePopup({
-    title,
-    showCancelButton = false,
-    onConfirm,
-    onCancel,
-  }: FirePopupParamsType) {
-    setPopupConfig({
-      isOpen: true,
+  const firePopup = useCallback(
+    ({
       title,
-      showCancelButton,
+      showCancelButton = false,
       onConfirm,
       onCancel,
-    });
-  }
+    }: FirePopupParamsType) => {
+      setPopupConfig({
+        isOpen: true,
+        title,
+        showCancelButton,
+        onConfirm,
+        onCancel,
+      });
+    },
+    []
+  );
 
   const Popup = useMemo(() => {
     function PopupComponent() {

@@ -52,7 +52,7 @@ export const mock_createRoomResponse: Room = {
 export const mock_roomInfo: RoomInfo.Room = {
   id: "3345678",
   name: "銀河路跑2v2",
-  status: "WATTING",
+  status: "WAITING",
   game: { id: "456", name: "銀河路跑" },
   host: {
     id: "mock-currentUser-uid",
