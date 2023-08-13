@@ -20,7 +20,7 @@ const enum REDUCER_ACTION_TYPE {
   REMOVE_PLAYER,
   UPDATE_HOST,
   UPDATE_ROOM_STATUS,
-  TOGGLE_USER_READY_STATUS,
+  UPDATE_USER_READY_STATUS,
   CLEAN_UP_ROOM,
 }
 
@@ -50,7 +50,7 @@ type UpdateRoomStatus = {
 };
 
 type UpdateUserReadyStatus = {
-  type: REDUCER_ACTION_TYPE.TOGGLE_USER_READY_STATUS;
+  type: REDUCER_ACTION_TYPE.UPDATE_USER_READY_STATUS;
   payload: Pick<RoomInfo.User, "id" | "isReady">;
 };
 
@@ -109,17 +109,16 @@ const useRoomReducer = (
       return { ...state, host: nextHost };
     }
 
-    case REDUCER_ACTION_TYPE.TOGGLE_USER_READY_STATUS: {
+    case REDUCER_ACTION_TYPE.UPDATE_USER_READY_STATUS: {
       const { payload } = action;
       const nextPlayers = [...state.players];
       const userIndex = nextPlayers.findIndex(
         (player) => player.id === payload.id
       );
 
-      if (userIndex === -1)
-        throw new Error("Recived invalid user id when toggling ready status.");
+      if (userIndex === -1) return state;
 
-      nextPlayers[userIndex].isReady = !nextPlayers[userIndex].isReady;
+      nextPlayers[userIndex].isReady = payload.isReady;
       return {
         ...state,
         players: nextPlayers,
@@ -128,7 +127,14 @@ const useRoomReducer = (
 
     case REDUCER_ACTION_TYPE.UPDATE_ROOM_STATUS: {
       const { payload } = action;
-      return { ...state, status: payload.status };
+      return {
+        ...state,
+        status: payload.status,
+        players: state.players.map((player) => ({
+          ...player,
+          isReady: payload.status === "PLAYING",
+        })),
+      };
     }
 
     case REDUCER_ACTION_TYPE.CLEAN_UP_ROOM: {
@@ -171,11 +177,11 @@ export default function useRoom() {
     });
   }, []);
 
-  const toggleUserReadyStatus = useCallback(
-    (userId: RoomInfo.User["id"], isReady: boolean) => {
+  const updateUserReadyStatus = useCallback(
+    (payload: Omit<RoomInfo.User, "nickname">) => {
       dispatch({
-        type: REDUCER_ACTION_TYPE.TOGGLE_USER_READY_STATUS,
-        payload: { id: userId, isReady },
+        type: REDUCER_ACTION_TYPE.UPDATE_USER_READY_STATUS,
+        payload,
       });
     },
     []
@@ -192,7 +198,7 @@ export default function useRoom() {
     removePlayer,
     updateHost,
     updateRoomStatus,
-    toggleUserReadyStatus,
+    updateUserReadyStatus,
     cleanUpRoom,
   };
 }

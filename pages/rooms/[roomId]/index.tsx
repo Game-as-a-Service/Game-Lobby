@@ -33,14 +33,14 @@ export default function Room() {
     removePlayer,
     updateHost,
     updateRoomStatus,
-    toggleUserReadyStatus,
+    updateUserReadyStatus,
     cleanUpRoom,
   } = useRoom();
   const { socket } = useSocketCore();
   const { currentUser } = useAuth();
   const { Popup, firePopup } = usePopup();
   const { fetch } = useRequest();
-  const { query, push, replace } = useRouter();
+  const { query, replace } = useRouter();
   const roomId = query.roomId as string;
   const player = roomInfo.players.find(
     (player) => player.id === currentUser?.id
@@ -60,13 +60,14 @@ export default function Room() {
   }, [fetch, initializeRoom, cleanUpRoom, roomId]);
 
   useEffect(() => {
-    // when user joined room
-    socket?.on(SOCKET_EVENT.USER_JOINED, ({ user }: { user: User }) => {
+    if (!socket || !currentUser?.id) return;
+
+    socket.on(SOCKET_EVENT.USER_JOINED, ({ user }: { user: User }) => {
       addPlayer(user);
     });
 
-    socket?.on(SOCKET_EVENT.USER_LEFT, ({ user }: { user: User }) => {
-      if (user.id === currentUser?.id) {
+    socket.on(SOCKET_EVENT.USER_LEFT, ({ user }: { user: User }) => {
+      if (user.id === currentUser.id) {
         firePopup({
           title: `你已被踢出房間`,
           onConfirm: () => replace("/"),
@@ -75,58 +76,53 @@ export default function Room() {
       removePlayer(user.id);
     });
 
-    socket?.on(SOCKET_EVENT.USER_READY, ({ user }: { user: User }) => {
-      toggleUserReadyStatus(user.id, true);
+    socket.on(SOCKET_EVENT.USER_READY, ({ user }: { user: User }) => {
+      updateUserReadyStatus({ ...user, isReady: true });
     });
 
-    socket?.on(SOCKET_EVENT.USER_NOT_READY, ({ user }: { user: User }) => {
-      toggleUserReadyStatus(user.id, false);
+    socket.on(SOCKET_EVENT.USER_NOT_READY, ({ user }: { user: User }) => {
+      updateUserReadyStatus({ ...user, isReady: false });
     });
 
-    socket?.on(SOCKET_EVENT.HOST_CHANGED, ({ user }: { user: User }) => {
+    socket.on(SOCKET_EVENT.HOST_CHANGED, ({ user }: { user: User }) => {
       updateHost(user.id);
     });
 
-    socket?.on(
-      SOCKET_EVENT.GAME_STARTED,
-      ({ gameUrl }: { gameUrl: string }) => {
-        updateRoomStatus("PLAYING");
-        // TODO: iframe the url and start game
-        firePopup({
-          title: `所有玩家已準備完畢，並已開始遊戲! 遊戲網址為：${gameUrl}`,
-        });
-      }
-    );
+    socket.on(SOCKET_EVENT.GAME_STARTED, ({ gameUrl }: { gameUrl: string }) => {
+      updateRoomStatus("PLAYING");
+      // TODO: iframe the url and start game
+      firePopup({
+        title: `開始遊戲! 遊戲網址為：${gameUrl}`,
+      });
+    });
 
-    socket?.on(SOCKET_EVENT.GAME_ENDED, () => {
+    socket.on(SOCKET_EVENT.GAME_ENDED, () => {
       updateRoomStatus("WAITING");
-      roomInfo.players.forEach((player) => (player.isReady = false));
       firePopup({
         title: `遊戲已結束!`,
       });
     });
 
-    socket?.on(SOCKET_EVENT.ROOM_CLOSED, () => {
+    socket.on(SOCKET_EVENT.ROOM_CLOSED, () => {
       firePopup({
         title: `房間已關閉!`,
         onConfirm: () => replace("/"),
       });
     });
   }, [
-    roomInfo,
+    socket,
+    currentUser?.id,
     addPlayer,
     removePlayer,
-    toggleUserReadyStatus,
+    updateUserReadyStatus,
     updateHost,
     updateRoomStatus,
     replace,
-    currentUser?.id,
-    socket,
     firePopup,
   ]);
 
   // Event: kick user
-  async function handleClickKick(user: Omit<RoomInfo.User, "isReady">) {
+  async function handleClickKick(user: User) {
     const handleKickUser = async () => {
       try {
         await fetch(kickUser({ roomId, userId: user.id }));
@@ -160,7 +156,7 @@ export default function Room() {
     });
   }
 
-  // the user leave room
+  // Event: leave room
   const handleLeave = () => {
     const leave = async () => {
       try {
@@ -181,9 +177,10 @@ export default function Room() {
     });
   };
 
+  // Event: toggle ready
   const handleToggleReady = async () => {
     try {
-      const { message } = player?.isReady
+      player?.isReady
         ? await fetch(playerCancelReady(roomId))
         : await fetch(playerReady(roomId));
     } catch (err) {
@@ -191,6 +188,7 @@ export default function Room() {
     }
   };
 
+  // Event: start game
   const handleStart = async () => {
     try {
       // Check all players are ready
