@@ -29,7 +29,7 @@
     "@svgr/webpack": "8.1.0",
     "axios": "1.6.2",
     "clsx": "1.2.1",
-    "http-proxy-middleware": "2.0.6",
+    "http-proxy-middleware": "3.0.3",
     "i18next": "23.7.6",
     "js-cookie": "3.0.5",
     "next": "13.4.8",
