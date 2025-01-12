@@ -61,28 +61,33 @@ function SelectBoxGroup<T = string>({
         </label>
       )}
       <ul className={cn("inline-flex gap-2.5", itemWrapperClassName)}>
-        {items.map((item) => (
-          <li key={item.key} className={itemClassName}>
-            <label
-              className={cn(
-                "block box-border leading-tight text-primary-200 bg-primary-200/20",
-                "border-2 border-transparent rounded-lg cursor-pointer",
-                value === item.value && "border-primary-200 text-primary-50"
-              )}
-              htmlFor={`${selectBoxId}_${item.key}`}
-              aria-checked={value === item.value}
-            >
-              {item.label}
-            </label>
-            <input
-              type="checkbox"
-              id={`${selectBoxId}_${item.key}`}
-              checked={value === item.value}
-              className="absolute w-0 h-0 pointer-events-none"
-              onChange={() => onChange?.(item.value)}
-            />
-          </li>
-        ))}
+        {items.map((item) => {
+          const checkboxId = `${selectBoxId}_${item.key}`;
+          const isChecked = value === item.value;
+
+          return (
+            <li key={item.key} className={itemClassName}>
+              <label
+                className={cn(
+                  "block box-border leading-tight text-primary-200 bg-primary-200/20",
+                  "border-2 border-transparent rounded-lg cursor-pointer select-none",
+                  isChecked && "border-primary-200 text-primary-50"
+                )}
+                htmlFor={checkboxId}
+                aria-checked={isChecked}
+              >
+                {item.label}
+              </label>
+              <input
+                type="checkbox"
+                id={checkboxId}
+                checked={isChecked}
+                className="[clip:rect(0,0,0,0)] absolute p-0 border-0 w-0 h-0 overflow-hidden"
+                onChange={() => onChange?.(item.value)}
+              />
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

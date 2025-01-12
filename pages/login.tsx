@@ -5,7 +5,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 
 import ButtonV2, { ButtonVariant } from "@/components/shared/Button/v2";
-import Cover from "@/components/shared/Cover";
+import Image from "@/components/shared/Image";
 import Icon, { IconName } from "@/components/shared/Icon";
 
 import useAuth from "@/hooks/context/useAuth";
@@ -53,7 +53,7 @@ const Login: NextPageWithProps = () => {
       <div className="absolute xl:-top-5 xl:-right-5 xl:w-[58%] xl:h-[calc(100%+40px)] rounded-2xl gradient-light shadow blur-[20px]" />
       <div className="px-2 sm:px-6 xl:pl-24 2xl:px-24 flex-1 flex flex-col justify-center items-start">
         <h2 className="relative flex items-center gap-2 text-2xl font-normal text-primary-100 mb-12">
-          <Cover src="/logo.png" alt="logo" width={48} height={48} />
+          <Image src="/logo.png" alt="logo" width={48} height={48} priority />
           遊戲微服務大平台
         </h2>
         <p className="text-primary-50 text-3xl font-medium mb-4">
@@ -88,7 +88,7 @@ Login.Anonymous = true;
 
 Login.getLayout = ({ children }) => (
   <div className="w-screen h-screen bg-[#252558]">
-    <Cover
+    <Image
       src="/images/v2/login-bg.png"
       alt="login cover"
       className="fixed w-full h-screen bg-[#252558]"

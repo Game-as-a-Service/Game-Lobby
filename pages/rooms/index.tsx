@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Cover from "@/components/shared/Cover";
+import Image from "@/components/shared/Image";
 import Modal from "@/components/shared/Modal";
 import Tabs, { TabItemType } from "@/components/shared/Tabs";
 import { useGameList } from "@/features/game";
@@ -53,7 +53,7 @@ function TabPaneContent({ tabKey }: Readonly<TabItemType<RoomType>>) {
         {room && (
           <JoinLockRoomForm id={room.id}>
             <div className="flex mb-4 gap-4 text-primary-50">
-              <Cover
+              <Image
                 className="w-12 h-12 rounded-lg object-cover"
                 src={room.game.imgUrl}
                 alt={room.game.name}

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { UserInfoForm } from "@/features/user";
 import useAuth from "@/hooks/context/useAuth";
 import Modal from "./Modal";
-import Cover from "./Cover";
+import Image from "./Image";
 
 enum HeaderActions {
   CHAT = "CHAT",
@@ -65,7 +65,7 @@ export default function Header({
       )}
     >
       <div className="flex items-center gap-3">
-        <Cover src="/logo.png" alt="logo" width={40} height={40} />
+        <Image src="/logo.png" alt="logo" width={40} height={40} priority />
         <h2 className="text-primary-100 text-2xl">遊戲微服務大平台</h2>
       </div>
       <div className="header___actions flex gap-5">

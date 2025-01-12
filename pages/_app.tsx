@@ -34,9 +34,7 @@ function App({ Component, pageProps }: AppWithProps) {
     Component.Anonymous || !!process.env.NEXT_PUBLIC_CI_MODE || false;
   const isProduction = env !== Env.PROD ? false : true;
 
-  const Layout =
-    Component.getLayout ??
-    (({ children }) => <AppLayout>{children}</AppLayout>);
+  const Layout = Component.getLayout ?? AppLayout;
 
   const getHistory = (children: ReactElement) => {
     return isProduction ? (

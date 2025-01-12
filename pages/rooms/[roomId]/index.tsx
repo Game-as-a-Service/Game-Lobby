@@ -3,7 +3,7 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import Cover from "@/components/shared/Cover";
+import Image from "@/components/shared/Image";
 import RoomUserCardList from "@/components/rooms/RoomUserCardList";
 import RoomButtonGroup from "@/components/rooms/RoomButtonGroup";
 import GameWindow from "@/components/rooms/GameWindow";
@@ -137,6 +137,7 @@ export default function Room() {
     currentUser?.id,
     roomId,
     updateRoomId,
+    updateGameUrl,
     addPlayer,
     removePlayer,
     updateUserReadyStatus,
@@ -238,10 +239,9 @@ export default function Room() {
         <>
           <div className="relative w-full h-[280px] overflow-hidden">
             {roomInfo.currentPlayers && (
-              <Cover
+              <Image
                 src={gameInfo?.img || gameDefaultCoverImg.src}
                 alt={gameInfo?.name || "default game cover"}
-                draggable={false}
                 priority
                 fill
                 className="object-cover"

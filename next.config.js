@@ -9,6 +9,7 @@ if (process.env.ANALYZE === "true") {
   });
 }
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   i18n,
   output: "standalone",

@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import gameDefaultCoverImg from "@/public/images/game-default-cover.png";
 import { GameType } from "@/requests/games";
 import Icon from "@/components/shared/Icon";
-import Cover from "@/components/shared/Cover";
+import Image from "@/components/shared/Image";
 
 function GameCardDetailed({
   children,
@@ -16,13 +16,11 @@ function GameCardDetailed({
   return (
     <div className="flex text-white mx-10 px-11 gap-4">
       <div className="relative flex items-end justify-end flex-[60%]">
-        <Cover
+        <Image
           src={img || gameDefaultCoverImg.src}
           alt={name}
-          draggable={false}
-          priority
-          fill
           className="object-cover"
+          fill
         />
         {children}
       </div>
@@ -48,14 +46,7 @@ function GameCardDetailed({
           <ul className="flex gap-3">
             <li className="relative w-16 h-10">
               {img && (
-                <Cover
-                  src={img}
-                  alt={name}
-                  draggable={false}
-                  priority
-                  fill
-                  className="object-cover"
-                />
+                <Image src={img} alt={name} className="object-cover" fill />
               )}
             </li>
           </ul>

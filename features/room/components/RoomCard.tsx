@@ -1,6 +1,6 @@
 import type { Room } from "@/requests/rooms";
 
-import Cover from "@/components/shared/Cover";
+import Image from "@/components/shared/Image";
 import Button, { ButtonSize } from "@/components/shared/Button/v2";
 import { useJoinRoom } from "../hooks";
 
@@ -22,7 +22,7 @@ function RoomCard({ room, onClick }: Readonly<RoomsCardProps>) {
   return (
     <div className="bg-primary-700/40 rounded-2xl">
       <div className="flex p-4 gap-4 text-primary-50">
-        <Cover
+        <Image
           className="w-16 h-16 rounded-lg object-cover"
           src={room.game.imgUrl}
           alt={room.game.name}
