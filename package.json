@@ -93,7 +93,7 @@
   },
   "resolutions": {
     "@babel/core": "7.26.7",
-    "@types/react": "18.2.25",
+    "@types/react": "18.3.18",
     "jackspeak": "2.1.1"
   }
 }
